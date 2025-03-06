@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "798221873917",
+    "project_id": "fir-forminiproject",
+    "storage_bucket": "fir-forminiproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798221873917:android:4b50c9512540131310c494",
+        "android_client_info": {
+          "package_name": "com.example.weektwo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4c90qaH3eF3gdAxj6yR_BfZDLlB7A-7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
