@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -10,51 +10,61 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Map<String, dynamic>? userData;
+  String? email; // เก็บอีเมลจาก Firebase Authentication
   bool _isLoading = false;
-  Future<void> getUserAPI() async {
-    print('get user');
 
-    final url = Uri.parse('https://reqres.in/api/users/2');
-    final response = await http.get(url);
-    final responseData = jsonDecode(response.body);
-    setState(() {
-      userData = responseData['data'];
-    });
+  @override
+  void initState() {
+    super.initState();
+    // เรียกใช้ฟังก์ชันเพื่อดึงข้อมูลอีเมลหลังจากที่ผู้ใช้ล็อกอิน
+    getUserEmail();
   }
 
-Future<void> deleteUser() async {
+  Future<void> getUserEmail() async {
+    try {
+      // ตรวจสอบว่าผู้ใช้ล็อกอินอยู่หรือไม่
+      User? user = FirebaseAuth.instance.currentUser;
+      
+      if (user != null) {
+        setState(() {
+          email = user.email;  // เก็บอีเมลของผู้ใช้ที่ล็อกอินแล้ว
+        });
+      } else {
+        // หากไม่ได้ล็อกอิน จะไม่สามารถดึงข้อมูลได้
+        print('No user is logged in');
+      }
+    } catch (error) {
+      print('Error getting user email: $error');
+    }
+  }
+
+  // ฟังก์ชันสำหรับล็อกเอ้าท์ผู้ใช้
+  Future<void> signOutUser() async {
     setState(() {
       _isLoading = true;
     });
 
-    final url = Uri.parse('https://reqres.in/api/users/2');
-    final response = await http.delete(url);  // ใช้ HTTP DELETE
-
-    if (response.statusCode == 204) {
+    try {
+      // ทำการล็อกเอ้าท์ผู้ใช้จาก Firebase
+      await FirebaseAuth.instance.signOut();
       setState(() {
-        userData = null;  // ลบข้อมูลผู้ใช้หลังจากลบบัญชี
+        email = null; // ลบข้อมูลผู้ใช้ใน UI
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Account deleted successfully')),
+        SnackBar(content: Text('Logged out successfully')),
       );
-    } else {
+      // หลังจากล็อกเอ้าท์แล้วให้กลับไปที่หน้าล็อคอิน
+      Navigator.pushReplacementNamed(context, 'login');  // ไปที่หน้าล็อกอิน
+    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete account')),
+        SnackBar(content: Text('Failed to log out: $error')),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
-  @override
-  void initState() {
-    super.initState();
-    print('hello word');
-    getUserAPI();
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -63,43 +73,34 @@ Future<void> deleteUser() async {
         title: Center(child: Text('Profile')),
         backgroundColor: Colors.blue,
       ),
-      body: userData == null
-          ? const Center(
-              child: Text('No data'),
-            )
+      body: email == null
+          ? const Center(child: CircularProgressIndicator())  // รอการดึงข้อมูล
           : Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(userData!['avatar']),
+                      backgroundImage: AssetImage('assets/profile.jpg'), // ใช้ภาพโปรไฟล์
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Text(
-                      '${userData!['first_name']}${userData!['last_name']}',
+                      'Email: $email',  // แสดงอีเมล
+                      style: TextStyle(fontSize: 18),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      userData!['email'],
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: _isLoading ? null : deleteUser,  // ปิดปุ่มระหว่างโหลด
+                      onPressed: _isLoading ? null : signOutUser,  // เมื่อกำลังโหลดจะไม่สามารถคลิกได้
                       child: _isLoading
-                          ? CircularProgressIndicator()  // แสดงการโหลด
-                          : const Text('Delete Account'),
-                    )
+                          ? CircularProgressIndicator()
+                          : const Text('Log Out'),
+                    ),
                   ],
                 ),
               ),
             ),
-            
     );
   }
 }

@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'fir-forminiproject.firebasestorage.app',
     measurementId: 'G-0JDN8D18QJ',
   );
+
 }

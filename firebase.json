@@ -1,1 +1,55 @@
-{"hosting":{"public":"public","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]},"flutter":{"platforms":{"android":{"default":{"projectId":"fir-forminiproject","appId":"1:798221873917:android:4b50c9512540131310c494","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fir-forminiproject","configurations":{"android":"1:798221873917:android:4b50c9512540131310c494","ios":"1:798221873917:ios:a70653ef78344d2f10c494","macos":"1:798221873917:ios:a70653ef78344d2f10c494","web":"1:798221873917:web:f394d5f2c2e4ee1f10c494","windows":"1:798221873917:web:f32f34363ba60c9010c494"}}}}}}
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "fir-forminiproject",
+          "appId": "1:798221873917:android:4b50c9512540131310c494",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fir-forminiproject",
+          "configurations": {
+            "android": "1:798221873917:android:4b50c9512540131310c494",
+            "ios": "1:798221873917:ios:a70653ef78344d2f10c494",
+            "macos": "1:798221873917:ios:a70653ef78344d2f10c494",
+            "web": "1:798221873917:web:f394d5f2c2e4ee1f10c494",
+            "windows": "1:798221873917:web:f32f34363ba60c9010c494"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}
