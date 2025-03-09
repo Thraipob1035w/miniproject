@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:weektwo/constant/constant.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -75,12 +76,25 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            //เรียกผ่านตัวแปร file constant.dart
+            fontSize: pFont,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: pColor,
       ),
       body: Stack(
         children: [
+          Positioned(
+            child: Image.asset(
+              'assets/image/ggg.png',
+            ),
+          ),
+
           // วิดีโอพื้นหลัง
           _controller.value.isInitialized
               ? SizedBox.expand(
@@ -93,7 +107,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 )
-              : Container(color: Colors.black),
+              : Container(color: const Color.fromARGB(255, 255, 255, 255)),
 
           // ฟอร์มล็อกอินอยู่บนวิดีโอ
           Center(
@@ -110,6 +124,9 @@ class _LoginState extends State<Login> {
                         labelText: 'Email',
                         fillColor: Colors.white,
                         filled: true,
+                        prefixIcon: Icon(Icons.email,
+                            color: Colors.grey), // ใส่ไอคอนอีเมล
+                        border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -126,6 +143,9 @@ class _LoginState extends State<Login> {
                         labelText: 'Password',
                         fillColor: Colors.white,
                         filled: true,
+                        prefixIcon: Icon(Icons.lock,
+                            color: Colors.grey), // ใส่ไอคอนอีเมล
+                        border: OutlineInputBorder(),
                       ),
                       obscureText: true,
                       validator: (value) {
@@ -147,7 +167,8 @@ class _LoginState extends State<Login> {
                       onPressed: () {
                         Navigator.pushNamed(context, 'registor');
                       },
-                      child: const Text('Don\'t have an account? Register here'),
+                      child:
+                          const Text('Don\'t have an account? Register here'),
                     ),
                   ],
                 ),
